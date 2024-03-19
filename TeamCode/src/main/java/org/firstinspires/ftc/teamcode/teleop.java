@@ -43,6 +43,5 @@ public class teleop extends LinearOpMode {
         while (opModeIsActive()) {
             // Run
         }
-
     }
 }
