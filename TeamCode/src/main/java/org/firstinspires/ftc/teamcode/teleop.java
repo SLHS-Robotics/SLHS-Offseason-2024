@@ -16,7 +16,38 @@ public class teleop extends LinearOpMode {
     public Servo wristservo;
     public Servo clawservo;
 
+  
+    //Define Motors
+    public DcMotor frontRightM;
+    public DcMotor frontLeftM;
+    public DcMotor backRightM;
+    public DcMotor backLeftM;
     public void runOpMode() {
+        // Pull and set to hardware motors
+        frontRightM = hardwareMap.get(DcMotor.class,"frontRightM");
+        frontLeftM = hardwareMap.get(DcMotor.class,"frontLeftM");
+        backRightM = hardwareMap.get(DcMotor.class,"backRightM");
+        backLeftM = hardwareMap.get(DcMotor.class,"backLeftM");
+
+        waitForStart();
+        // Set directions
+        frontRightM.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftM.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRightM.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftM.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        // Reset encoders
+        frontRightM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Set encoder mode
+        frontRightM.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftM.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightM.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftM.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
        turntablemotor = hardwareMap.get(DcMotor.class,"turntable");
        armmotor= hardwareMap.get(DcMotor.class,"armmotor");
@@ -42,5 +73,9 @@ public class teleop extends LinearOpMode {
         wristservo.setPosition(0.0);
         clawservo.setPosition(0.0);
 
+        // run until the end of the match (driver presses STOP)
+        while (opModeIsActive()) {
+            // Run
+        }
     }
 }
