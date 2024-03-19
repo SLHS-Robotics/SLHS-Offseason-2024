@@ -15,13 +15,13 @@ public class teleop extends LinearOpMode {
     public Servo armservo;
     public Servo wristservo;
     public Servo clawservo;
-
   
     //Define Motors
     public DcMotor frontRightM;
     public DcMotor frontLeftM;
     public DcMotor backRightM;
     public DcMotor backLeftM;
+
     public void runOpMode() {
         // Pull and set to hardware motors
         frontRightM = hardwareMap.get(DcMotor.class,"frontRightM");
@@ -49,12 +49,12 @@ public class teleop extends LinearOpMode {
         backLeftM.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-       turntablemotor = hardwareMap.get(DcMotor.class,"turntable");
-       armmotor= hardwareMap.get(DcMotor.class,"armmotor");
+        turntablemotor = hardwareMap.get(DcMotor.class,"turntable");
+        armmotor= hardwareMap.get(DcMotor.class,"armmotor");
 
-       armservo= hardwareMap.get(Servo.class,"armservo");
-       wristservo = hardwareMap.get(Servo.class,"wrist");
-       clawservo = hardwareMap.get(Servo.class,"claw");
+        armservo= hardwareMap.get(Servo.class,"armservo");
+        wristservo = hardwareMap.get(Servo.class,"wrist");
+        clawservo = hardwareMap.get(Servo.class,"claw");
 
         turntablemotor.setDirection(DcMotor.Direction.FORWARD);
         armmotor.setDirection(DcMotor.Direction.FORWARD);
