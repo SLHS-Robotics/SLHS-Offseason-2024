@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
+import org.openftc.apriltag.AprilTagDetection;
+
 @TeleOp
 public class teleop extends LinearOpMode {
     public DcMotor turntablemotor;
@@ -19,6 +22,28 @@ public class teleop extends LinearOpMode {
     public DcMotor frontLeftM;
     public DcMotor backRightM;
     public DcMotor backLeftM;
+
+    public static abstract class AprilTagFunc {
+        public int id;
+
+        abstract void func(AprilTagPoseFtc loc);
+    }
+    public class AprilTagFuncFollow extends AprilTagFunc {
+        @Override
+        void func(AprilTagPoseFtc loc) {
+            // TODO: implement logic
+        }
+        AprilTagFuncFollow() { id = 0; }
+    };
+    public AprilTagFuncFollow at_follow;
+    public class AprilTagFuncPrint extends AprilTagFunc {
+        @Override
+        void func(AprilTagPoseFtc loc) {
+            telemetry.addData("Tag", java.lang.String.format("%d Detected!", this.id));
+        }
+        AprilTagFuncPrint() { id = 1; }
+    }
+    public AprilTagFuncPrint at_print;
 
     public void runOpMode() {
         // Pull and set to hardware motors
@@ -73,7 +98,7 @@ public class teleop extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            // Run
+            
         }
     }
 }
