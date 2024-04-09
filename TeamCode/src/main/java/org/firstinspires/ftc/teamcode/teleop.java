@@ -6,8 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-import org.openftc.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.List;
 
 @TeleOp
 public class teleop extends LinearOpMode {
@@ -23,27 +28,21 @@ public class teleop extends LinearOpMode {
     public DcMotor backRightM;
     public DcMotor backLeftM;
 
-    public static abstract class AprilTagFunc {
-        public int id;
+    public AprilTagProcessor at;
+    public VisionPortal cam;
 
-        abstract void func(AprilTagPoseFtc loc);
-    }
-    public class AprilTagFuncFollow extends AprilTagFunc {
-        @Override
-        void func(AprilTagPoseFtc loc) {
+    public class AprilTagFuncs {
+        void Follow() {
             // TODO: implement logic
+            telemetry.addData("Follow", "Not coded in yet!");
         }
-        AprilTagFuncFollow() { id = 0; }
-    };
-    public AprilTagFuncFollow at_follow;
-    public class AprilTagFuncPrint extends AprilTagFunc {
-        @Override
-        void func(AprilTagPoseFtc loc) {
-            telemetry.addData("Tag", java.lang.String.format("%d Detected!", this.id));
+        void Print() {
+            telemetry.addData("Print", "AprilTag #1 detected!");
         }
-        AprilTagFuncPrint() { id = 1; }
+
+        AprilTagFuncs() {}
     }
-    public AprilTagFuncPrint at_print;
+    public final AprilTagFuncs at_funcs = new AprilTagFuncs();
 
     public void runOpMode() {
         // Pull and set to hardware motors
@@ -96,9 +95,37 @@ public class teleop extends LinearOpMode {
         wristservo.setPosition(0.0);
         clawservo.setPosition(0.0);
 
+        // init april tag stuff
+        at = new AprilTagProcessor.Builder().build();
+        VisionPortal.Builder cam_builder = new VisionPortal.Builder();
+
+        WebcamName cam_ptr = hardwareMap.tryGet(WebcamName.class, "cam"); // placeholder name
+        if (cam_ptr == null) // if we can't get the camera
+            cam_builder.setCamera(BuiltinCameraDirection.BACK); // presumably the phone's camera
+        else
+            cam_builder.setCamera(cam_ptr);
+        cam_builder.addProcessor(at);
+        cam_builder.build();
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            
+            // turn off camera stream at will
+            if (gamepad1.dpad_down) {
+                cam.stopStreaming();
+            } else if (gamepad1.dpad_up) {
+                cam.resumeStreaming();
+            }
+
+            // april tag
+            List<AprilTagDetection> detections = at.getDetections();
+            for (AprilTagDetection i : detections) { // TODO: iterate over de-/increasing id
+                switch (i.id) { // not the most efficient
+                    // this really isn't what i wanted to do but java SUCKS :<
+                    case 0: at_funcs.Follow();
+                    case 1: at_funcs.Print();
+                    default: break;
+                }
+            }
         }
     }
 }
