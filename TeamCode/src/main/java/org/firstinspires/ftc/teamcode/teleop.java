@@ -125,13 +125,15 @@ public class teleop extends LinearOpMode {
             }
 
             // april tag
-            List<AprilTagDetection> detections = at.getDetections();
-            for (AprilTagDetection i : detections) { // TODO: iterate over de-/increasing id
-                switch (i.id) { // not the most efficient
-                    // this really isn't what i wanted to do but java SUCKS :<
-                    case 0: at_funcs.Follow();
-                    case 1: at_funcs.Print();
-                    default: break;
+            if (using_at_funcs) {
+                List<AprilTagDetection> detections = at.getDetections();
+                for (AprilTagDetection i : detections) { // TODO: iterate over de-/increasing id
+                    switch (i.id) { // not the most efficient
+                        // this really isn't what i wanted to do but java SUCKS :<
+                        case 0: at_funcs.Follow();
+                        case 1: at_funcs.Print();
+                        default: break;
+                    }
                 }
             }
 
