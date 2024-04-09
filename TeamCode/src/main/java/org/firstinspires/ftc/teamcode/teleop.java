@@ -74,6 +74,71 @@ public class teleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             // Run
+
+            //movement controls
+            // forward controls (check if user is pushing forward)
+            if(gamepad1.left_stick_y >0) {
+                //check if person is trying to turn left at the same time
+                //prioritize turning left
+                if (gamepad1.left_stick_x < 0) {
+                    frontRightM.setPower(1);
+                    frontLeftM.setPower(-1);
+                    backRightM.setPower(1);
+                    backLeftM.setPower(-1);
+                    //alright, after we did that then restart the loop
+                    return;
+                }
+                //next, check for the right
+                else if (gamepad1.left_stick_x > 0) {
+                    frontRightM.setPower(-1);
+                    frontLeftM.setPower(1);
+                    backRightM.setPower(-1);
+                    backLeftM.setPower(1);
+                    //alright, after we did that then restart the loop
+                    return;
+                }
+                //finally, if the person is only trying to go forward, go forward
+                frontRightM.setPower(1);
+                frontLeftM.setPower(1);
+                backRightM.setPower(1);
+                backLeftM.setPower(1);
+
+
+            }
+            // backwards controls (if he isn't pushing forwards, is he pulling backwards?
+            else if (gamepad1.left_stick_y < 0) {
+                if (gamepad1.left_stick_x < 0) {
+                    frontRightM.setPower(1);
+                    frontLeftM.setPower(-1);
+                    backRightM.setPower(1);
+                    backLeftM.setPower(-1);
+                    //alright, after we did that then restart the loop
+                    return;
+                }
+                //next, check for the right
+                else if (gamepad1.left_stick_x > 0) {
+                    frontRightM.setPower(-1);
+                    frontLeftM.setPower(1);
+                    backRightM.setPower(-1);
+                    backLeftM.setPower(1);
+                    //alright, after we did that then restart the loop
+                    return;
+                }
+
+                frontRightM.setPower(-1);
+                frontLeftM.setPower(-1);
+                backRightM.setPower(-1);
+                backLeftM.setPower(-1);
+
+
+            }  else if ((gamepad1.left_stick_x == 0) && (gamepad1.left_stick_y == 0)) {
+                frontRightM.setPower(0);
+                frontLeftM.setPower(0);
+                backRightM.setPower(0);
+                backLeftM.setPower(0);
+            }
+
+
         }
     }
 }
