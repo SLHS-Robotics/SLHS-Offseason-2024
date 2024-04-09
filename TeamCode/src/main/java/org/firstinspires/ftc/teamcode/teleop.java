@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -28,6 +29,7 @@ public class teleop extends LinearOpMode {
     public DcMotor backRightM;
     public DcMotor backLeftM;
 
+    public boolean using_at_funcs = false;
     public AprilTagProcessor at;
     public VisionPortal cam;
 
@@ -107,6 +109,8 @@ public class teleop extends LinearOpMode {
         cam_builder.addProcessor(at);
         cam_builder.build();
 
+        Gamepad previousGamepad1 = gamepad1;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             // turn off camera stream at will
@@ -114,6 +118,10 @@ public class teleop extends LinearOpMode {
                 cam.stopStreaming();
             } else if (gamepad1.dpad_up) {
                 cam.resumeStreaming();
+            }
+
+            if (gamepad1.options && !previousGamepad1.options) {
+                using_at_funcs = !using_at_funcs;
             }
 
             // april tag
@@ -126,6 +134,8 @@ public class teleop extends LinearOpMode {
                     default: break;
                 }
             }
+
+            previousGamepad1 = gamepad1;
         }
     }
 }
