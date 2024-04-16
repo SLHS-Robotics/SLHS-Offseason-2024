@@ -27,7 +27,6 @@ public class teleop extends LinearOpMode {
         backRightM = hardwareMap.get(DcMotor.class,"backRightM");
         backLeftM = hardwareMap.get(DcMotor.class,"backLeftM");
 
-        waitForStart();
         // Set directions
         frontRightM.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftM.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -70,6 +69,8 @@ public class teleop extends LinearOpMode {
         armservo.setPosition(0.0);
         wristservo.setPosition(0.0);
         clawservo.setPosition(0.0);
+
+        waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
