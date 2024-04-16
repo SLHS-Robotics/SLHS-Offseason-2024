@@ -32,7 +32,6 @@ public class teleop extends LinearOpMode {
         backRightM = hardwareMap.get(DcMotor.class,"backRightM");
         backLeftM = hardwareMap.get(DcMotor.class,"backLeftM");
 
-        waitForStart();
         // Set directions
         frontRightM.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftM.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -80,6 +79,8 @@ public class teleop extends LinearOpMode {
         // ...assuming this copies the objects
         previous_gamepad1 = gamepad1;
         previous_gamepad2 = gamepad2;
+
+        waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
