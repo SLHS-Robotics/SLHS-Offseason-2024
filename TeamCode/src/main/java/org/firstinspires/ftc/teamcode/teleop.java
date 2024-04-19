@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class teleop extends LinearOpMode {
@@ -20,6 +21,8 @@ public class teleop extends LinearOpMode {
     public DcMotor frontLeftM;
     public DcMotor backRightM;
     public DcMotor backLeftM;
+
+    public ElapsedTime time = new ElapsedTime();
 
     public Gamepad previous_gamepad1 = new Gamepad();
     public Gamepad previous_gamepad2 = new Gamepad();
