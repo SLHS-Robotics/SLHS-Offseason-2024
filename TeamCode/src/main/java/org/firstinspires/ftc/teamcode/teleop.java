@@ -13,6 +13,10 @@ public class teleop extends LinearOpMode {
     public Servo armservo;
     public Servo wristservo;
     public Servo clawservo;
+
+    public double Speed = 1;
+    public double RotateSp = 1;
+
   
     //Define Motors
     public DcMotor frontRightM;
@@ -80,58 +84,60 @@ public class teleop extends LinearOpMode {
             if(gamepad1.left_stick_y >0) {
                 //check if person is trying to turn left at the same time
                 //prioritize turning left
-                if (gamepad1.left_stick_x < 0) {
-                    frontRightM.setPower(1);
-                    frontLeftM.setPower(-1);
-                    backRightM.setPower(1);
-                    backLeftM.setPower(-1);
+                if (gamepad1.left_stick_x < -0.1) {
+                    frontRightM.setPower(RotateSp);
+                    frontLeftM.setPower(-RotateSp);
+                    backRightM.setPower(RotateSp);
+                    backLeftM.setPower(-RotateSp);
                     //alright, after we did that then restart the loop
-                    return;
+
                 }
                 //next, check for the right
-                else if (gamepad1.left_stick_x > 0) {
-                    frontRightM.setPower(-1);
-                    frontLeftM.setPower(1);
-                    backRightM.setPower(-1);
-                    backLeftM.setPower(1);
+                else if (gamepad1.left_stick_x > 0.1) {
+                    frontRightM.setPower(-RotateSp);
+                    frontLeftM.setPower(RotateSp);
+                    backRightM.setPower(-RotateSp);
+                    backLeftM.setPower(RotateSp);
                     //alright, after we did that then restart the loop
-                    return;
+
+                } else {
+                    //finally, if the person is only trying to go forward, go forward
+                    frontRightM.setPower(Speed);
+                    frontLeftM.setPower(Speed);
+                    backRightM.setPower(Speed);
+                    backLeftM.setPower(Speed);
                 }
-                //finally, if the person is only trying to go forward, go forward
-                frontRightM.setPower(1);
-                frontLeftM.setPower(1);
-                backRightM.setPower(1);
-                backLeftM.setPower(1);
 
 
             }
             // backwards controls (if he isn't pushing forwards, is he pulling backwards?
             else if (gamepad1.left_stick_y < 0) {
-                if (gamepad1.left_stick_x < 0) {
-                    frontRightM.setPower(1);
-                    frontLeftM.setPower(-1);
-                    backRightM.setPower(1);
-                    backLeftM.setPower(-1);
+                if (gamepad1.left_stick_x < -0.1) {
+                    frontRightM.setPower(RotateSp);
+                    frontLeftM.setPower(-RotateSp);
+                    backRightM.setPower(RotateSp);
+                    backLeftM.setPower(-RotateSp);
                     //alright, after we did that then restart the loop
-                    return;
+
                 }
                 //next, check for the right
-                else if (gamepad1.left_stick_x > 0) {
-                    frontRightM.setPower(-1);
-                    frontLeftM.setPower(1);
-                    backRightM.setPower(-1);
-                    backLeftM.setPower(1);
+                else if (gamepad1.left_stick_x > 0.1) {
+                    frontRightM.setPower(-RotateSp);
+                    frontLeftM.setPower(RotateSp);
+                    backRightM.setPower(-RotateSp);
+                    backLeftM.setPower(RotateSp);
                     //alright, after we did that then restart the loop
-                    return;
+
+                } else {
+
+                    frontRightM.setPower(-Speed);
+                    frontLeftM.setPower(-Speed);
+                    backRightM.setPower(-Speed);
+                    backLeftM.setPower(-Speed);
                 }
 
-                frontRightM.setPower(-1);
-                frontLeftM.setPower(-1);
-                backRightM.setPower(-1);
-                backLeftM.setPower(-1);
 
-
-            }  else if ((gamepad1.left_stick_x == 0) && (gamepad1.left_stick_y == 0)) {
+            }  else if ((Math.abs(gamepad1.left_stick_x) < 0.1) && (Math.abs(gamepad1.left_stick_y) < 0.1)) {
                 frontRightM.setPower(0);
                 frontLeftM.setPower(0);
                 backRightM.setPower(0);
