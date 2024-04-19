@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class teleop extends LinearOpMode {
@@ -19,6 +21,11 @@ public class teleop extends LinearOpMode {
     public DcMotor frontLeftM;
     public DcMotor backRightM;
     public DcMotor backLeftM;
+
+    public ElapsedTime time = new ElapsedTime();
+
+    public Gamepad previous_gamepad1 = new Gamepad();
+    public Gamepad previous_gamepad2 = new Gamepad();
 
     public void runOpMode() {
         // Pull and set to hardware motors
@@ -70,6 +77,11 @@ public class teleop extends LinearOpMode {
         wristservo.setPosition(0.0);
         clawservo.setPosition(0.0);
 
+        // initialize so null values aren't used
+        // ...assuming this copies the objects
+        previous_gamepad1 = gamepad1;
+        previous_gamepad2 = gamepad2;
+      
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
