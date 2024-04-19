@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class hw {
+public class HW {
     // Function motors and servos
     public DcMotor turntablemotor;
     public DcMotor armmotor;
@@ -28,7 +28,7 @@ public class hw {
 
     public HardwareMap hw_map;
 
-    public hw(HardwareMap given) throws NullPointerException {
+    public HW(HardwareMap given) throws NullPointerException {
         hw_map = given;
         if (hw_map == null) {
             NullPointerException e = new NullPointerException("Null hardware map");
@@ -86,5 +86,10 @@ public class hw {
         armservo.setPosition(0.0);
         wristservo.setPosition(0.0);
         clawservo.setPosition(0.0);
+    }
+
+    public void init_prev_gamepad(Gamepad g1, Gamepad g2) {
+        previous_gamepad1 = g1;
+        previous_gamepad2 = g2;
     }
 }
