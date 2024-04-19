@@ -81,7 +81,7 @@ public class teleop extends LinearOpMode {
 
             //movement controls
             // forward controls (check if user is pushing forward)
-            if(gamepad1.left_stick_y >0) {
+            if(gamepad1.left_stick_y > 0.1) {
                 //check if person is trying to turn left at the same time
                 //prioritize turning left
                 if (gamepad1.left_stick_x < -0.1) {
@@ -107,7 +107,7 @@ public class teleop extends LinearOpMode {
             }
             
             // backwards controls (if he isn't pushing forwards, is he pulling backwards?
-            else if (gamepad1.left_stick_y < 0) {
+            else if (gamepad1.left_stick_y < -0.1) {
                 if (gamepad1.left_stick_x < -0.1) {
                     frontRightM.setPower(RotateSp);
                     frontLeftM.setPower(-RotateSp);
