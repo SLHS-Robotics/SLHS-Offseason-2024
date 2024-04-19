@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class hw {
     // Function motors and servos
@@ -18,6 +20,11 @@ public class hw {
     public DcMotor frontLeftM;
     public DcMotor backRightM;
     public DcMotor backLeftM;
+
+    public ElapsedTime time = new ElapsedTime();
+
+    public Gamepad previous_gamepad1 = new Gamepad();
+    public Gamepad previous_gamepad2 = new Gamepad();
 
     public HardwareMap hw_map;
 
