@@ -128,7 +128,21 @@ public class teleop extends LinearOpMode {
                     backLeftM.setPower(-Speed);
                 }
             }
-
+            //turn when not moving
+            else if (gamepad1.left_stick_x < -0.1) {
+                frontRightM.setPower(RotateSp);
+                frontLeftM.setPower(-RotateSp);
+                backRightM.setPower(RotateSp);
+                backLeftM.setPower(-RotateSp);
+            }
+            //turn when not moving
+            else if (gamepad1.left_stick_x > 0.1) {
+                frontRightM.setPower(-RotateSp);
+                frontLeftM.setPower(RotateSp);
+                backRightM.setPower(-RotateSp);
+                backLeftM.setPower(RotateSp);
+            }
+            //if the joystick is not being touched then stop
             else if ((Math.abs(gamepad1.left_stick_x) < 0.1) && (Math.abs(gamepad1.left_stick_y) < 0.1)) {
                 frontRightM.setPower(0);
                 frontLeftM.setPower(0);
