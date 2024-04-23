@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class teleop extends LinearOpMode {
     public DcMotor turntablemotor;
     public DcMotor armmotor;
-    public Servo armservo;
-    public Servo wristservo;
+    public DcMotor armmotor2;
+    // public Servo wristservo;
     public Servo clawservo;
 
     public double Speed = 1;
@@ -59,26 +59,27 @@ public class teleop extends LinearOpMode {
 
         turntablemotor = hardwareMap.get(DcMotor.class,"turntable");
         armmotor= hardwareMap.get(DcMotor.class,"armmotor");
+        armmotor2 = hardwareMap.get(DcMotor.class,"armmotor2");
 
-        armservo= hardwareMap.get(Servo.class,"armservo");
-        wristservo = hardwareMap.get(Servo.class,"wrist");
+        // wristservo = hardwareMap.get(Servo.class,"wrist");      // TBD
         clawservo = hardwareMap.get(Servo.class,"claw");
 
         turntablemotor.setDirection(DcMotor.Direction.FORWARD);
         armmotor.setDirection(DcMotor.Direction.FORWARD);
+        armmotor2.setDirection(DcMotor.Direction.FORWARD);
 
-        armservo.setDirection(Servo.Direction.FORWARD);
-        wristservo.setDirection(Servo.Direction.FORWARD);
+        // wristservo.setDirection(Servo.Direction.FORWARD);
         clawservo.setDirection(Servo.Direction.FORWARD);
 
         turntablemotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armmotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         turntablemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armmotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        armservo.setPosition(0.0);
-        wristservo.setPosition(0.0);
+        // wristservo.setPosition(0.0);
         clawservo.setPosition(0.0);
 
         // initialize so null values aren't used
