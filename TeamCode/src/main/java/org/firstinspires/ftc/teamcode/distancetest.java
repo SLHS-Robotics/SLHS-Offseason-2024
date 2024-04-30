@@ -20,6 +20,7 @@ public class distancetest extends LinearOpMode {
 
         while (opModeIsActive()) {
             telemetry.addData("distance = ",distance.getDistance(DistanceUnit.CM));
+            telemetry.update();
 
 
         }
