@@ -19,6 +19,8 @@ public class teleop extends LinearOpMode {
     public double Speed = 1;
     public double RotateSp = 1;
 
+    public double arm_mult = 0.5;
+
   
     //Define Motors
     public DcMotor frontRightM;
@@ -163,6 +165,11 @@ public class teleop extends LinearOpMode {
                 backRightM.setPower(0);
                 backLeftM.setPower(0);
             }
+
+            // Basic arm control
+
+            armmotor.setPower(gamepad2.right_stick_x * arm_mult);
+            armmotor2.setPower(gamepad2.right_stick_y * arm_mult);
         }
     }
 }
