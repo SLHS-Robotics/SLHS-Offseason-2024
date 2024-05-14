@@ -59,6 +59,9 @@ public class teleop_ik extends LinearOpMode {
         armmotorA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armmotorB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        armmotorA.setTargetPosition(0);
+        armmotorB.setTargetPosition(0);
+
         armmotorA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armmotorB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -81,6 +84,10 @@ public class teleop_ik extends LinearOpMode {
 
             wishposX += (step * -gamepad1.right_stick_x);
             wishposY += (step * -gamepad1.right_stick_y);
+            // get some readings on these
+            telemetry.addData("wishposX", wishposX);
+            telemetry.addData("wishposY", wishposY);
+            telemetry.update();
 
             // total distance of wished position (from base of the forearm)
             double wishdist = Math.sqrt((wishposX * wishposX) + (wishposY * wishposY));
@@ -102,6 +109,8 @@ public class teleop_ik extends LinearOpMode {
             // make parameter for armmotorB negative as forearm goes down
             armmotorA.setTargetPosition( (int)((angleA / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT) );
             armmotorB.setTargetPosition( -(int)((angleB / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT) );
+
+            prev_time = time.time(TimeUnit.MILLISECONDS);
         }
     }
 }
