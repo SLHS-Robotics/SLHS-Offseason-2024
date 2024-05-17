@@ -28,8 +28,8 @@ public class teleop_ik extends LinearOpMode {
     public Servo clawservo;
 
     // current POSition (X, Y, Angle of A (upper arm), Angle of B (forearm))
-    public double posX = armlenA + armlenB; // assume arms are initially parallel w/ horizontal
-    public double posY = 0.0;
+    //public double posX = armlenA + armlenB; // assume arms are initially parallel w/ horizontal
+    //public double posY = 0.0;
     // WISHed position (ditto)
     public double wishposX = armlenA + armlenB;
     public double wishposY = 0.0;
@@ -38,12 +38,14 @@ public class teleop_ik extends LinearOpMode {
 
     public ElapsedTime time = new ElapsedTime();
 
-    public final double wishspeed = 3.0; // 3 in. / 1 sec.
+    // temporarily jacked up 30x because it's really slow for some reason
+    public final double wishspeed = 90.0; // 3 in. / 1 sec.
 
     public Gamepad previous_gamepad1 = new Gamepad();
     public Gamepad previous_gamepad2 = new Gamepad();
 
     public void runOpMode() {
+        // names don't match; intentional, will work with "armbot" robo config
         armmotorA = hardwareMap.get(DcMotor.class,"armmotor");
         armmotorB = hardwareMap.get(DcMotor.class,"armmotor2");
 
@@ -59,6 +61,8 @@ public class teleop_ik extends LinearOpMode {
         armmotorA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armmotorB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        // before running op mode, make sure arms are parallel w/ horizontal
+        // later code/math depends on that assumption
         armmotorA.setTargetPosition(0);
         armmotorB.setTargetPosition(0);
 
@@ -80,6 +84,9 @@ public class teleop_ik extends LinearOpMode {
         while (opModeIsActive()) {
             // keep speed consistent regardless of computer speed
             long time_diff = Math.abs(time.time(TimeUnit.MILLISECONDS) - prev_time);
+            telemetry.addData("time", time.time(TimeUnit.MILLISECONDS));
+            telemetry.addData("prev_time", prev_time);
+            telemetry.addData("time_diff", time_diff);
             double step = wishspeed * (double)(time_diff / 1000.0);
 
             wishposX += (step * -gamepad1.right_stick_x);
@@ -87,7 +94,6 @@ public class teleop_ik extends LinearOpMode {
             // get some readings on these
             telemetry.addData("wishposX", wishposX);
             telemetry.addData("wishposY", wishposY);
-            telemetry.update();
 
             // total distance of wished position (from base of the forearm)
             double wishdist = Math.sqrt((wishposX * wishposX) + (wishposY * wishposY));
@@ -105,10 +111,24 @@ public class teleop_ik extends LinearOpMode {
                     / (2.0 * armlenA * armlenB));
             double angleC = Math.PI - angleA - angleB; // corresponding angles --> vertical angles
             angleB -= angleC; // make angle of upper arm now relative to horizontal
+            // angle readings!
+            telemetry.addData("angleA", angleA);
+            telemetry.addData("angleB", angleB);
+            telemetry.addData("angleC", angleC);
 
             // make parameter for armmotorB negative as forearm goes down
-            armmotorA.setTargetPosition( (int)((angleA / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT) );
-            armmotorB.setTargetPosition( -(int)((angleB / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT) );
+            int targetposA = (int)((angleA / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT);
+            int targetposB = -(int)((angleB / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT);
+            armmotorA.setTargetPosition(targetposA);
+            armmotorB.setTargetPosition(targetposB);
+            // also get some readings on these
+            telemetry.addData("targetposA", targetposA);
+            telemetry.addData("targetposB", targetposB);
+
+            armmotorA.setPower(0.3);
+            armmotorB.setPower(0.3);
+
+            telemetry.update();
 
             prev_time = time.time(TimeUnit.MILLISECONDS);
         }
