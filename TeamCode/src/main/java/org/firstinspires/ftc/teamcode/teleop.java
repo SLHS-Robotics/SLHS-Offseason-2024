@@ -16,8 +16,8 @@ public class teleop extends LinearOpMode {
     // public Servo wristservo;
     public Servo clawservo;
 
-    public double Speed = 0.5;
-    public double RotateSp = 0.5;
+    public double Speed = 0.3;
+    public double RotateSp = 0.3;
 
     public double arm_mult = 0.5;
 
@@ -96,10 +96,10 @@ public class teleop extends LinearOpMode {
             // Run
 
 
-            frontRightM.setPower(gamepad1.left_stick_x * Speed - gamepad1.right_stick_x * RotateSp);
-            frontLeftM.setPower(gamepad1.left_stick_x * Speed + gamepad1.right_stick_x * RotateSp );
-            backRightM.setPower(gamepad1.left_stick_x * Speed - gamepad1.right_stick_x * RotateSp);
-            backLeftM.setPower(gamepad1.left_stick_x * Speed + gamepad1.right_stick_x * RotateSp );
+            frontRightM.setPower(gamepad1.left_stick_y * Speed + gamepad1.right_stick_x * RotateSp);
+            frontLeftM.setPower(gamepad1.left_stick_y * Speed - gamepad1.right_stick_x * RotateSp );
+            backRightM.setPower(gamepad1.left_stick_y * Speed + gamepad1.right_stick_x * RotateSp);
+            backLeftM.setPower(gamepad1.left_stick_y * Speed - gamepad1.right_stick_x * RotateSp );
 
             // Basic arm control
 
