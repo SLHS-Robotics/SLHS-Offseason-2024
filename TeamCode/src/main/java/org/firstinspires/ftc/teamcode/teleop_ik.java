@@ -16,8 +16,10 @@ public class teleop_ik extends LinearOpMode {
     public final double ENCODER_PPR = 134.4; // = 2*pi radians
     public final double MOTOR_TO_JOINT_A_GEAR_RATIO = 0.5; // estimate
     public final double MOTOR_TO_JOINT_B_GEAR_RATIO = 0.5; // don't know the real values
+    // these two values are almost definitely wrong
     public final double A_FULL_REV_PULSE_COUNT = ENCODER_PPR / MOTOR_TO_JOINT_A_GEAR_RATIO;
     public final double B_FULL_REV_PULSE_COUNT = ENCODER_PPR / MOTOR_TO_JOINT_B_GEAR_RATIO;
+
     // upper arm
     public final double armlenA = 10.1;
     public DcMotor armmotorA;
@@ -25,7 +27,7 @@ public class teleop_ik extends LinearOpMode {
     public final double armlenB = 12.2;
     public DcMotor armmotorB;
 
-    public Servo clawservo;
+    //public Servo clawservo; // unused
 
     // current POSition (X, Y, Angle of A (upper arm), Angle of B (forearm))
     //public double posX = armlenA + armlenB; // assume arms are initially parallel w/ horizontal
@@ -50,13 +52,13 @@ public class teleop_ik extends LinearOpMode {
         armmotorB = hardwareMap.get(DcMotor.class,"armmotor2");
 
         // wristservo = hardwareMap.get(Servo.class,"wrist");      // TBD
-        clawservo = hardwareMap.get(Servo.class,"claw");
+        //clawservo = hardwareMap.get(Servo.class,"claw");
 
         armmotorA.setDirection(DcMotor.Direction.FORWARD);
         armmotorB.setDirection(DcMotor.Direction.FORWARD);
 
         // wristservo.setDirection(Servo.Direction.FORWARD);
-        clawservo.setDirection(Servo.Direction.FORWARD);
+        //clawservo.setDirection(Servo.Direction.FORWARD);
 
         armmotorA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armmotorB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -70,7 +72,7 @@ public class teleop_ik extends LinearOpMode {
         armmotorB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // wristservo.setPosition(0.0);
-        clawservo.setPosition(0.0);
+        //clawservo.setPosition(0.0);
 
         // initialize so null values aren't used
         // ...assuming this copies the objects
@@ -89,7 +91,7 @@ public class teleop_ik extends LinearOpMode {
             telemetry.addData("time_diff", time_diff);
             double step = wishspeed * (double)(time_diff / 1000.0);
 
-            wishposX += (step * -gamepad1.right_stick_x);
+            wishposX += (step * gamepad1.right_stick_x);
             wishposY += (step * -gamepad1.right_stick_y);
             // get some readings on these
             telemetry.addData("wishposX", wishposX);
@@ -98,32 +100,43 @@ public class teleop_ik extends LinearOpMode {
             // total distance of wished position (from base of the forearm)
             double wishdist = Math.sqrt((wishposX * wishposX) + (wishposY * wishposY));
 
-            // angle of forearm relative to horizontal
+            // angle of upper arm relative to horizontal
             double angleA = Math.acos((armlenA * armlenA
                         + wishdist * wishdist
                         - armlenB * armlenB)
                         / (2.0 * armlenA * wishdist))
                           + Math.atan2(wishposY, wishposX);
-            // angle of upper arm relative to forearm
+            // angle of forearm relative to forearm
             double angleB = Math.acos((armlenA * armlenA
                     + armlenB * armlenB
                     - wishdist * wishdist)
                     / (2.0 * armlenA * armlenB));
             double angleC = Math.PI - angleA - angleB; // corresponding angles --> vertical angles
-            angleB -= angleC; // make angle of upper arm now relative to horizontal
+            //angleB -= angleC; // make angle of upper arm now relative to horizontal
+
             // angle readings!
             telemetry.addData("angleA", angleA);
             telemetry.addData("angleB", angleB);
             telemetry.addData("angleC", angleC);
 
             // make parameter for armmotorB negative as forearm goes down
-            int targetposA = (int)((angleA / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT);
-            int targetposB = -(int)((angleB / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT);
+            // negative = rotates towards back of bot
+            //int targetposA = (int)((angleA / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT);
+            //int targetposB = -(int)((angleB / (2 * Math.PI)) * A_FULL_REV_PULSE_COUNT);
+            //int targetposB = -(int)((angleC / (2 * Math.PI)) * B_FULL_REV_PULSE_COUNT);
+            int targetposA = (int)((angleA / (2 * Math.PI)) * 560.0);
+            int targetposB = -(int)((angleC / (2 * Math.PI)) * 560.0);
             armmotorA.setTargetPosition(targetposA);
             armmotorB.setTargetPosition(targetposB);
             // also get some readings on these
             telemetry.addData("targetposA", targetposA);
             telemetry.addData("targetposB", targetposB);
+
+            if (wishdist > Math.sqrt(armlenA * armlenA + armlenB * armlenB)) {
+                telemetry.addData("Range", "Out of range!");
+            } else {
+                telemetry.addData("Range", "In range...");
+            }
 
             armmotorA.setPower(0.3);
             armmotorB.setPower(0.3);
