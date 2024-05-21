@@ -16,8 +16,8 @@ public class teleop extends LinearOpMode {
     // public Servo wristservo;
     public Servo clawservo;
 
-    public double Speed = 1;
-    public double RotateSp = 1;
+    public double Speed = 0.3;
+    public double RotateSp = 0.3;
 
     public double arm_mult = 0.5;
 
@@ -95,76 +95,11 @@ public class teleop extends LinearOpMode {
         while (opModeIsActive()) {
             // Run
 
-            //movement controls
-            // forward controls (check if user is pushing forward)
-            if(gamepad1.left_stick_y > 0.1) {
-                //check if person is trying to turn left at the same time
-                //prioritize turning left
-                if (gamepad1.left_stick_x < -0.1) {
-                    frontRightM.setPower(RotateSp);
-                    frontLeftM.setPower(-RotateSp);
-                    backRightM.setPower(RotateSp);
-                    backLeftM.setPower(-RotateSp);
-                }
-                //next, check for the right
-                else if (gamepad1.left_stick_x > 0.1) {
-                    frontRightM.setPower(-RotateSp);
-                    frontLeftM.setPower(RotateSp);
-                    backRightM.setPower(-RotateSp);
-                    backLeftM.setPower(RotateSp);
-                }
-                else {
-                    //finally, if the person is only trying to go forward, go forward
-                    frontRightM.setPower(Speed);
-                    frontLeftM.setPower(Speed);
-                    backRightM.setPower(Speed);
-                    backLeftM.setPower(Speed);
-                }
-            }
-            
-            // backwards controls (if he isn't pushing forwards, is he pulling backwards?
-            else if (gamepad1.left_stick_y < -0.1) {
-                if (gamepad1.left_stick_x < -0.1) {
-                    frontRightM.setPower(RotateSp);
-                    frontLeftM.setPower(-RotateSp);
-                    backRightM.setPower(RotateSp);
-                    backLeftM.setPower(-RotateSp);
-                }
-                //next, check for the right
-                else if (gamepad1.left_stick_x > 0.1) {
-                    frontRightM.setPower(-RotateSp);
-                    frontLeftM.setPower(RotateSp);
-                    backRightM.setPower(-RotateSp);
-                    backLeftM.setPower(RotateSp);
-                }
-                else {
-                    frontRightM.setPower(-Speed);
-                    frontLeftM.setPower(-Speed);
-                    backRightM.setPower(-Speed);
-                    backLeftM.setPower(-Speed);
-                }
-            }
-            //turn when not moving
-            else if (gamepad1.left_stick_x < -0.1) {
-                frontRightM.setPower(RotateSp);
-                frontLeftM.setPower(-RotateSp);
-                backRightM.setPower(RotateSp);
-                backLeftM.setPower(-RotateSp);
-            }
-            //turn when not moving
-            else if (gamepad1.left_stick_x > 0.1) {
-                frontRightM.setPower(-RotateSp);
-                frontLeftM.setPower(RotateSp);
-                backRightM.setPower(-RotateSp);
-                backLeftM.setPower(RotateSp);
-            }
-            //if the joystick is not being touched then stop
-            else if ((Math.abs(gamepad1.left_stick_x) < 0.1) && (Math.abs(gamepad1.left_stick_y) < 0.1)) {
-                frontRightM.setPower(0);
-                frontLeftM.setPower(0);
-                backRightM.setPower(0);
-                backLeftM.setPower(0);
-            }
+
+            frontRightM.setPower(gamepad1.left_stick_y * Speed + gamepad1.right_stick_x * RotateSp);
+            frontLeftM.setPower(gamepad1.left_stick_y * Speed - gamepad1.right_stick_x * RotateSp );
+            backRightM.setPower(gamepad1.left_stick_y * Speed + gamepad1.right_stick_x * RotateSp);
+            backLeftM.setPower(gamepad1.left_stick_y * Speed - gamepad1.right_stick_x * RotateSp );
 
             // Basic arm control
 
