@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.concurrent.TimeUnit;
+
 @TeleOp
 public class teleop extends LinearOpMode {
     public DcMotor turntablemotor;
@@ -19,7 +21,7 @@ public class teleop extends LinearOpMode {
     public double Speed = 0.3;
     public double RotateSp = 0.3;
 
-    public double arm_mult = 0.5;
+    public final double arm_speed = 40.0;
 
   
     //Define Motors
@@ -78,8 +80,18 @@ public class teleop extends LinearOpMode {
         armmotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         turntablemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armmotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); // gonna want to use the encoder
+        armmotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // gonna need these variables to more easily update the arm motors' target positions
+        int armmotor_pos = 0;
+        int armmotor2_pos = 0;
+        armmotor.setTargetPosition(armmotor_pos);
+        armmotor2.setTargetPosition(armmotor2_pos);
+        // needs power to move to target positions
+        // won't move initially because encoders already reset to zero
+        armmotor.setPower(0.5);
+        armmotor2.setPower(0.5);
 
         // wristservo.setPosition(0.0);
         clawservo.setPosition(0.0);
@@ -91,6 +103,7 @@ public class teleop extends LinearOpMode {
       
         waitForStart();
 
+        long prev_time = time.time(TimeUnit.MILLISECONDS);
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             // Run
@@ -102,9 +115,32 @@ public class teleop extends LinearOpMode {
             backLeftM.setPower(gamepad1.left_stick_y * Speed - gamepad1.right_stick_x * RotateSp );
 
             // Basic arm control
+            // keep speed constant w/ respect to time
+            long time_diff = Math.abs(time.time(TimeUnit.MILLISECONDS) - prev_time);
+            double step = arm_speed * (double)time_diff;
 
-            armmotor.setPower(gamepad2.right_stick_x * arm_mult);
-            armmotor2.setPower(gamepad2.right_stick_y * arm_mult);
+            // slow down arm movement while right bumper is being held
+            if (gamepad1.right_bumper)
+                step *= 0.5;
+
+            // upper arm movement
+            if (gamepad1.dpad_up)
+                armmotor_pos += (int)step;
+            else if (gamepad1.dpad_down)
+                armmotor_pos -= (int)step;
+
+            // forearm movement
+            if (gamepad1.dpad_left)
+                armmotor2_pos += (int)step;
+            else if (gamepad1.dpad_right)
+                armmotor2_pos -= (int)step;
+
+            // set target positions after determining dpad input
+            armmotor.setTargetPosition(armmotor_pos);
+            armmotor2.setTargetPosition(armmotor2_pos);
+
+            // remember to update prev_time
+            prev_time = time.time(TimeUnit.MILLISECONDS);
         }
     }
 }
