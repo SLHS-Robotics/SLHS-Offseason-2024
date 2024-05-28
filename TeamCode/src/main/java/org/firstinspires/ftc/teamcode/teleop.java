@@ -13,7 +13,7 @@ public class teleop extends LinearOpMode {
     public DcMotor turntablemotor;
     public DcMotor armmotor;
     public DcMotor armmotor2;
-    // public Servo wristservo;
+     public Servo wristservo;
     public Servo clawservo;
 
     public double Speed = 0.3;
@@ -63,14 +63,14 @@ public class teleop extends LinearOpMode {
         armmotor= hardwareMap.get(DcMotor.class,"armmotor");
         armmotor2 = hardwareMap.get(DcMotor.class,"armmotor2");
 
-        // wristservo = hardwareMap.get(Servo.class,"wrist");      // TBD
+         wristservo = hardwareMap.get(Servo.class,"wrist");      // TBD
         clawservo = hardwareMap.get(Servo.class,"claw");
 
         turntablemotor.setDirection(DcMotor.Direction.FORWARD);
         armmotor.setDirection(DcMotor.Direction.FORWARD);
         armmotor2.setDirection(DcMotor.Direction.FORWARD);
 
-        // wristservo.setDirection(Servo.Direction.FORWARD);
+        wristservo.setDirection(Servo.Direction.FORWARD);
         clawservo.setDirection(Servo.Direction.FORWARD);
 
         turntablemotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -95,11 +95,11 @@ public class teleop extends LinearOpMode {
         while (opModeIsActive()) {
             // Run
 
-
-            frontRightM.setPower(gamepad1.left_stick_y * Speed + gamepad1.right_stick_x * RotateSp);
-            frontLeftM.setPower(gamepad1.left_stick_y * Speed - gamepad1.right_stick_x * RotateSp );
-            backRightM.setPower(gamepad1.left_stick_y * Speed + gamepad1.right_stick_x * RotateSp);
-            backLeftM.setPower(gamepad1.left_stick_y * Speed - gamepad1.right_stick_x * RotateSp );
+            // movement control
+            frontRightM.setPower(gamepad1.left_stick_y/2 * Speed + gamepad1.left_stick_x * RotateSp);
+            frontLeftM.setPower(gamepad1.left_stick_y/2 * Speed - gamepad1.left_stick_x * RotateSp );
+            backRightM.setPower(gamepad1.left_stick_y/2 * Speed + gamepad1.left_stick_x * RotateSp);
+            backLeftM.setPower(gamepad1.left_stick_y/2 * Speed - gamepad1.left_stick_x * RotateSp );
 
             // Basic arm control
 
